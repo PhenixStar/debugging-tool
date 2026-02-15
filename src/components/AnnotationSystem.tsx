@@ -15,7 +15,6 @@ import type { AnnotationSystemOptions, DebugAnnotation } from '../lib/types'
 // ============================================================================
 
 interface AnnotationDialogProps {
-  element: HTMLElement
   elementInfo: {
     tagName: string
     id?: string
@@ -71,7 +70,6 @@ function formatExport(annotations: DebugAnnotation[]): string {
 // ============================================================================
 
 function AnnotationDialog({
-  element,
   elementInfo,
   onSave,
   onClose,
@@ -400,7 +398,6 @@ export function AnnotationSystem({
       {/* Annotation Dialog */}
       {enabled && dialogElement && dialogElementInfo && (
         <AnnotationDialog
-          element={dialogElement}
           elementInfo={dialogElementInfo}
           onSave={handleSaveAnnotation}
           onClose={() => {

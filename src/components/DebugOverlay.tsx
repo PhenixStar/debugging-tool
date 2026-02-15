@@ -5,11 +5,11 @@
 
 import { useCallback, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { cn, POSITION_STYLES } from '../lib/utils'
+import { cn } from '../lib/utils'
 import { FPSOverlay } from './FPSOverlay'
 import { ElementInspector } from './ElementInspector'
 import { AnnotationSystem, createAnnotationsAtom, useDebugAnnotations } from './AnnotationSystem'
-import type { DebugOverlayOptions, OverlayPosition, ProcessInfo } from '../lib/types'
+import type { DebugOverlayOptions, OverlayPosition } from '../lib/types'
 
 import {
   Activity,
@@ -290,15 +290,9 @@ export function DebugOverlay({ className, onClose, getProcessInfo }: DebugOverla
   const [coldReloadActive, setColdReloadActive] = useState(false)
   const [coldReloadProgress, setColdReloadProgress] = useState(0)
   const coldReloadTimeoutRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const [annotationCount, setAnnotationCount] = useState(0)
 
   // Get annotations for the count
   const [annotations] = useDebugAnnotations()
-
-  // Update annotation count from annotations
-  useState(() => {
-    setAnnotationCount(Object.keys(annotations).length)
-  })
 
   const handleClose = useCallback(() => {
     setState((prev) => ({ ...prev, enabled: false }))
@@ -327,8 +321,10 @@ export function DebugOverlay({ className, onClose, getProcessInfo }: DebugOverla
 
   const handleHotReload = useCallback(() => {
     // Try Vite HMR first, fallback to window reload
-    if ((import.meta as { hot?: { invalidate?: () => void } }).hot) {
-      (import.meta as { hot: { invalidate: () => void } }).hot.invalidate()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const meta = import.meta as any
+    if (meta?.hot) {
+      meta.hot.invalidate()
     } else {
       window.location.reload()
     }
@@ -415,7 +411,7 @@ export function DebugOverlay({ className, onClose, getProcessInfo }: DebugOverla
       {/* Annotation System */}
       <AnnotationSystem
         enabled={state.showAnnotations}
-        onAnnotationCountChange={setAnnotationCount}
+        onAnnotationCountChange={() => {}}
       />
     </div>,
     document.body

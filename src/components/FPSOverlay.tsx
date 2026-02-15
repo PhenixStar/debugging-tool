@@ -30,8 +30,6 @@ export function FPSOverlay({
 
   const [processInfo, setProcessInfo] = useState<ProcessInfo | null>(null)
 
-  const frameCountRef = useRef(0)
-  const lastTimeRef = useRef(performance.now())
   const rafIdRef = useRef<number | null>(null)
 
   // Fetch process info periodically if backend function is provided
